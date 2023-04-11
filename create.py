@@ -1,10 +1,10 @@
 from connection import cursor, data_base
 
 
-def creat_user(name, age, email, plan, type, id):
-    insert_user = f'''INSERT INTO users(user_name, user_age, user_email, user_plan, user_type, user_id)
+def creat_user(name, age, email, plan, type):
+    insert_user = f'''INSERT INTO users(user_name, user_age, user_email, user_plan, user_type)
     values
-    ('{name}', {age}, '{email}', '{plan}', '{type}', {id})'''
+    ('{name}', {age}, '{email}', '{plan}', '{type}')'''
 
     cursor.execute(insert_user)
     data_base.commit()
