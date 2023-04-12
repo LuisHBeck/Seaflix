@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from create import creat_user, creat_movie
+from read import read_user, read_movie
+from delete import delete_user, delete_movie
 
 janela = Tk()
 
@@ -41,20 +43,20 @@ class ApplicationX():
         self.bt_buscar = Button(self.frame_0, text='Buscar', bg="#1F4788", foreground='white')
         self.bt_buscar.place(relx=0.29, rely=0.25, relwidth=0.1, relheight=0.5)
 
-        self.bt_limpar = Button(self.frame_0, text='Limpar', bg="#1F4788", foreground='white')
+        self.bt_limpar = Button(self.frame_0, text='Limpar', bg="#1F4788", foreground='white', command=self.limpar)
         self.bt_limpar.place(relx=0.41, rely=0.25, relwidth=0.1, relheight=0.5)
 
         # CRUD
         self.bt_create = Button(self.frame_0, text='Create', bg="#1F4788", foreground='white', command=self.insert_user)
         self.bt_create.place(relx=0.53, rely=0.25, relwidth=0.1, relheight=0.5)
 
-        self.bt_read = Button(self.frame_0, text='Read', bg="#1F4788", foreground='white')
+        self.bt_read = Button(self.frame_0, text='Read', bg="#1F4788", foreground='white', command=self.show_user)
         self.bt_read.place(relx=0.65, rely=0.25, relwidth=0.1, relheight=0.5)
 
         self.bt_update = Button(self.frame_0, text='Update', bg="#1F4788", foreground='white')
         self.bt_update.place(relx=0.77, rely=0.25, relwidth=0.1, relheight=0.5)
 
-        self.bt_delete = Button(self.frame_0, text='Delete', bg="#1F4788", foreground='white')
+        self.bt_delete = Button(self.frame_0, text='Delete', bg="#1F4788", foreground='white', command=self.user_delete)
         self.bt_delete.place(relx=0.89, rely=0.25, relwidth=0.1, relheight=0.5)
 
     def labels(self):
@@ -76,6 +78,9 @@ class ApplicationX():
         self.lb_age_user = Label(self.frame_1, text="Age", background='#19B5FE')
         self.lb_age_user.place(relx=0.69, rely=0.45, relwidth=0.1, relheight=0.15)
 
+        self.lb_delete_user = Label(self.frame_1, text="DELETE", background='#19B5FE')
+        self.lb_delete_user.place(relx=0.005, rely=0.65, relwidth=0.1, relheight=0.15)
+
     def inputs(self):
         self.input_id_user = Entry(self.frame_0)
         self.input_id_user.place(relx=0.11, rely=0.25, relwidth=0.1, relheight=0.5)
@@ -95,26 +100,30 @@ class ApplicationX():
         self.input_age_user = Entry(self.frame_1)
         self.input_age_user.place(relx=0.80, rely=0.45, relwidth=0.19, relheight=0.15)
 
+        self.input_remove_id_user = Entry(self.frame_1)
+        self.input_remove_id_user.place(relx=0.12, rely=0.65, relwidth=0.19, relheight=0.15)
+
     def lista_frame2(self):
         self.lista_cliente = ttk.Treeview(self.frame_2, height=3,
                                           columns=('col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7'))
         self.lista_cliente.heading('#0', text='')
         self.lista_cliente.heading('#1', text='ID')
         self.lista_cliente.heading('#2', text='Name')
-        self.lista_cliente.heading('#3', text='E-mail')
-        self.lista_cliente.heading('#4', text='Plan')
-        self.lista_cliente.heading('#5', text='Type')
-        self.lista_cliente.heading('#6', text='Age')
+        self.lista_cliente.heading('#3', text='Age')
+        self.lista_cliente.heading('#4', text='E-mail')
+        self.lista_cliente.heading('#5', text='Plan')
+        self.lista_cliente.heading('#6', text='Type')
 
         self.lista_cliente.column("#0", width=1)
         self.lista_cliente.column("#1", width=10)
-        self.lista_cliente.column("#2", width=210)
-        self.lista_cliente.column("#3", width=210)
-        self.lista_cliente.column("#4", width=50)
-        self.lista_cliente.column("#5", width=50)
+        self.lista_cliente.column("#2", width=200)
+        self.lista_cliente.column("#3", width=50)
+        self.lista_cliente.column("#4", width=200)
+        self.lista_cliente.column("#5", width=70)
         self.lista_cliente.column("#6", width=50)
 
         self.lista_cliente.place(relx=0.01, rely=0.1, relwidth=0.95, relheight=0.85)
+        self.show_user()
 
     def insert_user(self):
         creat_user(self.input_name_user.get(),
@@ -123,3 +132,17 @@ class ApplicationX():
                  self.input_plan_user.get(),
                  self.input_type_user.get()
                  )
+
+    def show_user(self):
+        self.limpar()
+        users = read_user()
+        for i in users:
+            self.lista_cliente.insert("", "end", values=i)
+
+    def limpar(self):
+        self.lista_cliente.delete(*self.lista_cliente.get_children())
+
+    def user_delete(self):
+        delete_user(
+            self.input_remove_id_user.get()
+        )
