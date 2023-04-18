@@ -1,12 +1,17 @@
 from tkinter import *
 from tkinter import ttk
-from create import creat_user, creat_movie
-from read import read_user, read_movie, search_user
-from delete import delete_user, delete_movie
-from update import modify_user, modify_movie
+from create import creat_user
+from read import read_user, search_user
+from delete import delete_user
+from update import modify_user
+from matplotlib import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 
 janela = Tk()
 
+users_plot = []
+ages_plot = []
 
 class ApplicationX():
     def __init__(self):
@@ -17,11 +22,12 @@ class ApplicationX():
         self.labels()
         self.inputs()
         self.lista_frame2()
+        self.plot()
         janela.mainloop()
 
     def tela(self):
         self.janela.title("SEA-FLIX")
-        self.janela.geometry('700x500')
+        self.janela.geometry('700x700')
         self.janela.configure(background="#333333")
         self.janela.resizable(False, False)
         # self.janela.maxsize(width='700', height='500')
@@ -30,15 +36,15 @@ class ApplicationX():
     def frames(self):
         self.frame_0 = Frame(self.janela, bg='#686868',
                              highlightthickness=0.5, highlightbackground="white", )
-        self.frame_0.place(relx=0.03, rely=0.03, relwidth=0.94, relheight=0.11)
+        self.frame_0.place(relx=0.03, rely=0.03, relwidth=0.94, relheight=0.09)
 
         self.frame_1 = Frame(self.janela, bg='#686868',
                              highlightthickness=0.5, highlightbackground="white", )
-        self.frame_1.place(relx=0.03, rely=0.20, relwidth=0.94, relheight=0.35)
+        self.frame_1.place(relx=0.03, rely=0.13, relwidth=0.94, relheight=0.20)
 
         self.frame_2 = Frame(self.janela, bg='#686868',
                              highlightthickness=0.5, highlightbackground="white", )
-        self.frame_2.place(relx=0.03, rely=0.60, relwidth=0.94, relheight=0.35)
+        self.frame_2.place(relx=0.03, rely=0.3, relwidth=0.94, relheight=0.25)
 
     def botoes(self):
         self.bt_buscar = Button(self.frame_0, text='Buscar', bg="#1F4788", foreground='white', command=self.select_user)
@@ -145,12 +151,15 @@ class ApplicationX():
                  self.input_type_user.get()
                  )
         self.show_user()
+        self.plot()
 
     def show_user(self):
         self.limpar()
         users = read_user()
         for i in users:
             self.lista_cliente.insert("", "end", values=i)
+            users_plot.append(i[1])
+            ages_plot.append(i[2])
 
     def limpar(self):
         self.lista_cliente.delete(*self.lista_cliente.get_children())
@@ -164,10 +173,6 @@ class ApplicationX():
         self.input_update1_user.delete(0, END)
         
 
-    def limpar_input(self):
-        ...
-
-        
     def user_delete(self):
         delete_user(
             self.input_id_user.get()
@@ -210,3 +215,21 @@ class ApplicationX():
         self.input_email_user.insert(0, user[0][3])
         self.input_plan_user.insert(0, user[0][4])
         self.input_type_user.insert(0, user[0][5])
+
+    def plot(self):
+        figure = plt.Figure(figsize=(13, 5), dpi=50)
+        ax = figure.add_subplot(111)
+        canva = FigureCanvasTkAgg(figure, self.janela)
+        canva.get_tk_widget().place(relx=0.03, rely=0.57)
+
+        x = users_plot
+        y = ages_plot
+        
+        ax.bar(x, y)
+
+        ax.set_ylabel('Ages')
+        ax.set_title('Sea-Flix')
+
+        
+
+
