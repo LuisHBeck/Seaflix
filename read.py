@@ -17,3 +17,13 @@ def read_movie():
     result = cursor.fetchall()
 
     return result
+
+
+def search_user(id_user):
+    user_search = f'SELECT * from users WHERE idUsers= {id_user}'
+
+    cursor.execute(user_search)
+    result = cursor.fetchall()
+
+    return result
+

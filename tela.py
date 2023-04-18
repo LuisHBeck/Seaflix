@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from create import creat_user, creat_movie
-from read import read_user, read_movie
+from read import read_user, read_movie, search_user
 from delete import delete_user, delete_movie
 from update import modify_user, modify_movie
 
@@ -23,7 +23,7 @@ class ApplicationX():
         self.janela.title("SEA-FLIX")
         self.janela.geometry('700x500')
         self.janela.configure(background="#333333")
-        self.janela.resizable(True, True)
+        self.janela.resizable(False, False)
         # self.janela.maxsize(width='700', height='500')
         self.janela.minsize(width='700', height='500')
 
@@ -41,7 +41,7 @@ class ApplicationX():
         self.frame_2.place(relx=0.03, rely=0.60, relwidth=0.94, relheight=0.35)
 
     def botoes(self):
-        self.bt_buscar = Button(self.frame_0, text='Buscar', bg="#1F4788", foreground='white')
+        self.bt_buscar = Button(self.frame_0, text='Buscar', bg="#1F4788", foreground='white', command=self.select_user)
         self.bt_buscar.place(relx=0.29, rely=0.25, relwidth=0.1, relheight=0.5)
 
         self.bt_limpar = Button(self.frame_0, text='Limpar', bg="#1F4788", foreground='white', command=self.limpar)
@@ -54,7 +54,7 @@ class ApplicationX():
         self.bt_read = Button(self.frame_0, text='Read', bg="#1F4788", foreground='white', command=self.show_user)
         self.bt_read.place(relx=0.65, rely=0.25, relwidth=0.1, relheight=0.5)
 
-        self.bt_update = Button(self.frame_0, text='Update', bg="#1F4788", foreground='white', command=self.update_user)
+        self.bt_update = Button(self.frame_0, text='Update', bg="#1F4788", foreground='white', command=self.update_user_2)
         self.bt_update.place(relx=0.77, rely=0.25, relwidth=0.1, relheight=0.5)
 
         self.bt_delete = Button(self.frame_0, text='Delete', bg="#1F4788", foreground='white', command=self.user_delete)
@@ -79,14 +79,11 @@ class ApplicationX():
         self.lb_age_user = Label(self.frame_1, text="Age", background='#19B5FE')
         self.lb_age_user.place(relx=0.69, rely=0.45, relwidth=0.1, relheight=0.15)
 
-        self.lb_delete_user = Label(self.frame_1, text="DELETE", background='#19B5FE')
-        self.lb_delete_user.place(relx=0.005, rely=0.65, relwidth=0.1, relheight=0.15)
-
         self.lb_update_user = Label(self.frame_1, text="UPDATE", background='#19B5FE')
-        self.lb_update_user.place(relx=0.35, rely=0.65, relwidth=0.1, relheight=0.15)
+        self.lb_update_user.place(relx=0.005, rely=0.65, relwidth=0.1, relheight=0.15)
 
         self.lb_update1_user = Label(self.frame_1, text="NEW VALUE", background='#19B5FE')
-        self.lb_update1_user.place(relx=0.69, rely=0.65, relwidth=0.1, relheight=0.15)
+        self.lb_update1_user.place(relx=0.35, rely=0.65, relwidth=0.1, relheight=0.15)
 
     def inputs(self):
         self.input_id_user = Entry(self.frame_0)
@@ -107,14 +104,11 @@ class ApplicationX():
         self.input_age_user = Entry(self.frame_1)
         self.input_age_user.place(relx=0.80, rely=0.45, relwidth=0.19, relheight=0.15)
 
-        self.input_remove_id_user = Entry(self.frame_1)
-        self.input_remove_id_user.place(relx=0.12, rely=0.65, relwidth=0.19, relheight=0.15)
-
         self.input_update_user = Entry(self.frame_1)
-        self.input_update_user.place(relx=0.46, rely=0.65, relwidth=0.19, relheight=0.15)
+        self.input_update_user.place(relx=0.12, rely=0.65, relwidth=0.19, relheight=0.15)
 
         self.input_update1_user = Entry(self.frame_1)
-        self.input_update1_user.place(relx=0.80, rely=0.65, relwidth=0.19, relheight=0.15)
+        self.input_update1_user.place(relx=0.46, rely=0.65, relwidth=0.19, relheight=0.15)
 
     def lista_frame2(self):
         self.lista_cliente = ttk.Treeview(self.frame_2, height=3,
@@ -136,6 +130,11 @@ class ApplicationX():
         self.lista_cliente.column("#6", width=50)
 
         self.lista_cliente.place(relx=0.01, rely=0.1, relwidth=0.98, relheight=0.85)
+
+        self.scroll_lista = Scrollbar(self.frame_2, orient='vertical')
+        self.lista_cliente.configure(yscrollcommand=self.scroll_lista.set)
+        self.scroll_lista.place(relx=0.96 , rely=0.1, relwidth=0.04, relheight=0.85)
+
         self.show_user()
 
     def insert_user(self):
@@ -155,10 +154,23 @@ class ApplicationX():
 
     def limpar(self):
         self.lista_cliente.delete(*self.lista_cliente.get_children())
+        self.input_email_user.delete(0, END)
+        self.input_name_user.delete(0, END)
+        self.input_id_user.delete(0, END)
+        self.input_plan_user.delete(0, END)
+        self.input_type_user.delete(0, END)
+        self.input_age_user.delete(0, END)
+        self.input_update_user.delete(0, END)
+        self.input_update1_user.delete(0, END)
+        
 
+    def limpar_input(self):
+        ...
+
+        
     def user_delete(self):
         delete_user(
-            self.input_remove_id_user.get()
+            self.input_id_user.get()
         )
         self.show_user()
 
@@ -169,3 +181,32 @@ class ApplicationX():
             self.input_id_user.get()
         )
         self.show_user()
+
+    def update_user_2(self):
+        if self.input_name_user.get():
+            self.input_id_user.update()
+            self.input_name_user.update()
+            self.input_age_user.update()
+            self.input_email_user.update()
+            self.input_plan_user.update()
+            self.input_type_user.update()
+            modify_user(
+                self.input_id_user.get(),
+                self.input_name_user.get(),
+                self.input_age_user.get(),
+                self.input_email_user.get(),
+                self.input_plan_user.get(),
+                self.input_type_user.get()
+            )
+        self.show_user()
+
+
+    def select_user(self):
+        self.lista_cliente.delete(*self.lista_cliente.get_children())
+        user = search_user(self.input_id_user.get())
+        self.lista_cliente.insert(parent='', index=0, values=user[0])
+        self.input_name_user.insert(0, user[0][1])
+        self.input_age_user.insert(0, user[0][2])
+        self.input_email_user.insert(0, user[0][3])
+        self.input_plan_user.insert(0, user[0][4])
+        self.input_type_user.insert(0, user[0][5])
