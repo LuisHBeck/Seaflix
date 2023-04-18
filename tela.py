@@ -145,6 +145,7 @@ class ApplicationX():
                  self.input_plan_user.get(),
                  self.input_type_user.get()
                  )
+        self.show_user()
 
     def show_user(self):
         self.limpar()
@@ -159,6 +160,7 @@ class ApplicationX():
         delete_user(
             self.input_remove_id_user.get()
         )
+        self.show_user()
 
     def update_user(self):
         modify_user(
@@ -166,3 +168,4 @@ class ApplicationX():
             self.input_update1_user.get(),
             self.input_id_user.get()
         )
+        self.show_user()
